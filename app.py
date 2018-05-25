@@ -32,6 +32,12 @@ def index():
     #4. Adding Data to Our Database
     return render_template('add_user.html', myUser = myUser, oneItem = oneItem)
 
+#6. Dynamic URL Querying
+@app.route('/profile/<username>')
+def profile(username):
+    user = User.query.filter_by(username=username).first()
+    return render_template('profile.html',user=user)
+    
 @app.route('/post_user', methods=['POST'])
 def post_user():
     #return "<h1 style = 'color:red'>Hello, flask!</h1>"
