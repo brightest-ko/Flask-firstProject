@@ -1,35 +1,56 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 #4. Adding Data to Our Database
-from flask import render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
 
+    
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lucy:abcd123@localhost/flaskmovie'
 #'sqlite:////tmp/test.db'
+app.config['SECRET_KEY'] = 'super-secret'
+app.config['SECRET_REGISTERABLE'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
-#debugger mode
+#debugger mode #app.config['DEBUG'] = True
 db = SQLAlchemy(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(80), unique = True)
-    email = db.Column(db.String(120), unique = True)
-    
-    def __init__(self,username,email):
-        self.username = username
-        self.email = email
-    def __repr__(self):
-        return '<User %r>' % self.username
+#7. Implementing Authentication In Flask with Flask-Security
+# Define models
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
-@app.route('/')
-def index():
-    #5. Querying the Database
-    myUser = User.query.all()
-    oneItem = User.query.filter_by(username = "test").first()
-    #User.query.filter_by(username = "test") => query
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
+    confirmed_at = db.Column(db.DateTime())
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
+# Create a user to test with
+
+@app.before_first_request
+def create_user():
+    db.create_all()
+    user_datastore.create_user(email='matt@nobien.net', password='password')
+    db.session.commit()
+
     
-    #return "<h1 style = 'color:red'>Hello, flask!</h1>"
-    #4. Adding Data to Our Database
+# Views
+@app.route('/')
+@login_required
+def index():
     return render_template('add_user.html', myUser = myUser, oneItem = oneItem)
 
 #6. Dynamic URL Querying
