@@ -63,7 +63,7 @@ def index():
     login_user(user)
     return "you are now logged in!"
 
-#security에 이미 logout 이 있어서 그 url path를 이용하면 302에러 발
+
 @app.route("/logoutUser")
 def logoutUser():
     logout_user()
