@@ -18,3 +18,5 @@ def test_cal_multiply():
 #py.test
 #py.test -v
 #py.test -v -rxs , it can watch reason
+#py.test -k multiply
+#py.test -v -k multiply

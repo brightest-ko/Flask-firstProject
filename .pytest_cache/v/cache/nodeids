@@ -1,4 +1,4 @@
 [
-  "test/test_class.py::TestClass::()::test_one", 
-  "test/test_class.py::TestClass::()::test_two"
+  "tests/test_mathlib.py::test_calc_total", 
+  "tests/test_mathlib.py::test_cal_multiply"
 ]

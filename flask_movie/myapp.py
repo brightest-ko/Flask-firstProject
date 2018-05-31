@@ -48,13 +48,12 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
 # Create a user to test with
-'''
 #@app.before_first_request
 def create_user():
     db.create_all()
     user_datastore.create_user(email='matt@nobien.net', password='password')
     db.session.commit()
-'''
+
     
 # Views
 @app.route('/')
