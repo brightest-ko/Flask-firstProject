@@ -1,7 +1,4 @@
 [
-  "test_class.py::TestClass::()::test_one", 
-  "test_class.py::TestClass::()::test_two", 
-  "test_sample.py::test_answer", 
-  "test_sysexit.py::test_mytest", 
-  "test_tmpdir.py::test_needsfiles"
+  "test_mathlib.py::test_calc_total", 
+  "test_mathlib.py::test_cal_multiply"
 ]

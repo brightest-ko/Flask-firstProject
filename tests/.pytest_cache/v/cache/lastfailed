@@ -1,3 +1,7 @@
 {
+  "test_class.py": true, 
+  "test_sample.py": true, 
+  "test_sysexit.py": true, 
+  "test_tmpdir.py": true, 
   "test_tmpdir.py::test_needsfiles": true
 }
